@@ -12,7 +12,7 @@ asCsv = (fields, data, callback) ->
     callback message
   toCsv.send {fields, data}
 
-app.get '/events/:user', (req, res) ->
+app.get '/events/add', (req, res) ->
   event = req.query
   timestamp = event.timestamp
   store.write timestamp, event, ->
