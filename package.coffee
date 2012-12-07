@@ -8,5 +8,13 @@ repository:
   type: "git"
   url: "git@github.com:boundvariable/marshmallow.git"
 author: ""
-license: "BSD"
+dependencies:
+  express: '3.0.x'
+  courier: '0.7.x'
+  redis: '0.8.x'
+  csv: '0.2.x'
+  'coffee-script': '1.4.x'
+engines:
+  node: "*"
+
 
