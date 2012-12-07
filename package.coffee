@@ -15,6 +15,7 @@ dependencies:
   csv: '0.2.x'
   'coffee-script': '1.4.x'
 engines:
-  node: "*"
+  node: "0.8.x"
+  npm: "1.1.x"
 
 
