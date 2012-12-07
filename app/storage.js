@@ -38,7 +38,7 @@
         if (process.env.REDISTOGO_URL) {
           redisUrl = url.parse(process.env.REDISTOGO_URL);
           this.client = redis.createClient(redisUrl.port, redisUrl.hostname);
-          this.client.auth(redisToGoUrl.auth.split(":")[1]);
+          this.client.auth(redisUrl.auth.split(":")[1]);
         } else {
           this.client = redis.createClient();
         }
