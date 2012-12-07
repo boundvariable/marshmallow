@@ -1,4 +1,5 @@
 redis = require 'redis'
+url = require 'url'
 
 class Store
   MAX_IDLE = 2000
@@ -20,7 +21,12 @@ class Store
     if @client?.connected
       clearTimeout @keepaliveTimeout
     else
-      @client = redis.createClient()
+      if process.env.REDISTOGO_URL
+        redisUrl = url.parse process.env.REDISTOGO_URL
+        @client = redis.createClient redisUrl.port, redisUrl.hostname
+        @client.auth redisToGoUrl.auth.split(":")[1]
+      else
+        @client = redis.createClient()
     @keepaliveTimeout = setTimeout =>
       @client.quit()
     , MAX_IDLE
