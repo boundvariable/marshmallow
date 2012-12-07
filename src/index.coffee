@@ -24,7 +24,7 @@ app.get '/csv/events', (req,res) ->
   fields = req.query.fields?.split ','
   if from and to and fields
     store.read from, to, (err, data) ->
-      res.setHeader 'Content-Type', 'text/plain' #'text/csv'
+      res.setHeader 'Content-Type', 'text/csv'
       asCsv fields, data, (lines) ->
         result = """
         #{fields.join ','}
@@ -34,5 +34,5 @@ app.get '/csv/events', (req,res) ->
   else
     res.status(400).send '400'
 
-app.listen 8080
-
+port = process.env.PORT || 5000
+app.listen port, -> console.log "Listening on port #{port}"
