@@ -24,7 +24,7 @@ class Store
       if process.env.REDISTOGO_URL
         redisUrl = url.parse process.env.REDISTOGO_URL
         @client = redis.createClient redisUrl.port, redisUrl.hostname
-        @client.auth redisToGoUrl.auth.split(":")[1]
+        @client.auth redisUrl.auth.split(":")[1]
       else
         @client = redis.createClient()
     @keepaliveTimeout = setTimeout =>
