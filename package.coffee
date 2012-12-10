@@ -14,6 +14,10 @@ dependencies:
   redis: '0.8.x'
   csv: '0.2.x'
   'coffee-script': '1.4.x'
+devDependencies:
+  mocha: '1.7.x'
+  chai: '1.4.x'
+  fakeredis: '0.0.14'
 engines:
   node: "0.8.x"
   npm: "1.1.x"

@@ -13,23 +13,29 @@
   store = new Store('events');
 
   asCsv = function(fields, data, callback) {
-    var toCsv;
-    toCsv = fork(__dirname + '/csv');
-    toCsv.on('message', function(message) {
-      return callback(message);
-    });
-    return toCsv.send({
-      fields: fields,
-      data: data
-    });
+    var arrayToCsv;
+    if (process.env.NO_FORK) {
+      arrayToCsv = require('./csv').arrayToCsv;
+      return callback(arrayToCsv(fields, data));
+    } else {
+      fork("" + __dirname + "/csv");
+      toCsv.on('message', function(message) {
+        return callback(message);
+      });
+      return toCsv.send({
+        fields: fields,
+        data: data
+      });
+    }
   };
 
-  app.get('/events/:user', function(req, res) {
+  app.get('/events/add', function(req, res) {
     var event, timestamp;
     event = req.query;
     timestamp = event.timestamp;
     return store.write(timestamp, event, function() {
-      return res.status(200).send("{status: OK}");
+      res.setHeader('Content-Type', 'application/json');
+      return res.status(200).send('{"status": "OK"}');
     });
   });
 
@@ -41,10 +47,8 @@
     if (from && to && fields) {
       return store.read(from, to, function(err, data) {
         res.setHeader('Content-Type', 'text/csv');
-        return asCsv(fields, data, function(lines) {
-          var result;
-          result = "" + (fields.join(',')) + "\n" + (lines.join('\n'));
-          return res.status(200).send(result);
+        return asCsv(fields, data, function(csv) {
+          return res.status(200).send(csv);
         });
       });
     } else {
@@ -57,5 +61,7 @@
   app.listen(port, function() {
     return console.log("Listening on port " + port);
   });
+
+  module.exports = app;
 
 }).call(this);
