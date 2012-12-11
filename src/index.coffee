@@ -3,6 +3,7 @@ express = require 'express'
 {fork} = require 'child_process'
 
 app = express()
+app.use express.bodyParser()
 
 store = new Store 'events'
 
@@ -16,12 +17,15 @@ asCsv = (fields, data, callback) ->
       callback message
     toCsv.send {fields, data}
 
-app.get '/events/add', (req, res) ->
-  event = req.query
+app.post '/events/add', (req, res) ->
+  event = req.body
   timestamp = event.timestamp
-  store.write timestamp, event, ->
-    res.setHeader 'Content-Type', 'application/json'
-    res.status(200).send '{"status": "OK"}'
+  if timestamp
+    store.write timestamp, event, ->
+      res.setHeader 'Content-Type', 'application/json'
+      res.status(200).send '{"status": "OK"}'
+  else
+    res.status(400).send '{"status": "ERROR", message: "timestamp missing"}'
 
 app.get '/csv/events', (req,res) ->
   from = 1*req.query.from
@@ -33,7 +37,7 @@ app.get '/csv/events', (req,res) ->
       asCsv fields, data, (csv) ->
         res.status(200).send csv
   else
-    res.status(400).send '400'
+    res.status(400).send '{"status": "ERROR", message: "timstamp range missing"}'
 
 port = process.env.PORT || 5000
 

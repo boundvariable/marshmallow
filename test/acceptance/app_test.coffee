@@ -5,19 +5,23 @@ app = require '../../src'
 
 describe 'saving data', ->
 
-  it 'should record an event', (done) ->
-
+  it 'should record an event via POST', (done) ->
     event =
       timestamp: Date.now()
       a: 'A'
 
-    eventUrl = "/events/add?timestamp=#{event.timestamp}&a=#{event.a}"
-
     request(app)
-    .get(eventUrl)
+    .post("/events/add")
+    .send(event)
     .expect('Content-Type', /json/)
     .expect(200, '{"status": "OK"}')
     .end(done)
+
+  it 'should return a 400 error when the timestamp is missing', (done) ->
+    request(app)
+    .post("/events/add")
+    .send({})
+    .expect(400, done)
 
 describe 'retrieving data', ->
 
@@ -26,9 +30,9 @@ describe 'retrieving data', ->
       timestamp: Date.now()
       b: 'Zool'
 
-    eventUrl = "/events/add?timestamp=#{@event.timestamp}&b=#{@event.b}"
     request(app)
-    .get(eventUrl)
+    .post("/events/add")
+    .send(@event)
     .end(done)
 
   it 'should return csv containing events', (done) =>
