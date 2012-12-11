@@ -20,4 +20,10 @@ try {
   nameValuePairs.add(new BasicNameValuePair("some_name", " some value"));
   post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
   HttpResponse response = client.execute(post);
+} catch (ClientProtocolException e) {
+  // Whatever you like
+} catch (IOException e) {
+  // Whatever you like
+}
+
 ```
