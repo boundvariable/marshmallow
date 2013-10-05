@@ -12,7 +12,7 @@ asCsv = (fields, data, callback) ->
     {arrayToCsv} = require './csv'
     callback arrayToCsv(fields, data)
   else
-    fork "#{__dirname}/csv"
+    toCsv = fork "#{__dirname}/csv"
     toCsv.on 'message', (message) ->
       callback message
     toCsv.send {fields, data}
